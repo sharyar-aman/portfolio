@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #050505;
+  --color-accent: #ff2b3f;
+  --color-accent2: #ff6a3d;
+  --color-muted: #9a9a9a;
+  --font-head: var(--font-share);
+  --font-body: var(--font-jb);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #050505;
+  background-image:
+    linear-gradient(rgba(255, 60, 60, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 60, 60, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  color: #e8e8e8;
+  font-family: var(--font-jb), monospace;
+}
+
+.neon {
+  color: #ff2b3f;
+  text-shadow: 0 0 6px rgba(255, 43, 63, 0.85), 0 0 22px rgba(255, 43, 63, 0.45);
+}
+
+.neon-outline {
+  color: #050505;
+  -webkit-text-stroke: 1px #ff2b3f;
+  text-shadow: 0 0 10px rgba(255, 43, 63, 0.6), 0 0 30px rgba(255, 43, 63, 0.3);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.cursor {
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.1); }
+}
+.blob-a { animation: float 14s ease-in-out infinite; }
+.blob-b { animation: float 18s ease-in-out infinite reverse; }
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes spin-border { to { --border-angle: 360deg; } }
+.glow-border { position: relative; }
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--border-angle), transparent 0 60%, #ff2b3f, #ff6a3d, transparent);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spin-border 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes flick {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.55; }
+  94% { opacity: 1; }
+  95% { opacity: 0.35; }
+  96% { opacity: 1; }
+}
+.flicker { animation: flick 4.5s linear infinite; }
+
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(255, 43, 63, 0.06) 0 1px, transparent 1px 4px);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: skewX(-20deg);
+  transition: left 0.6s;
+}
+.shine:hover::after { left: 130%; }
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+@keyframes drop {
+  0% { top: 0; opacity: 0; }
+  30% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.drop { animation: drop 1.8s ease-in infinite; }
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.7);
+}
+
+::selection { background: #ff2b3f; color: #fff; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: #3a1214; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #ff2b3f; }
+:focus-visible { outline: 2px solid #ff6a3d; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flicker, .blob-a, .blob-b, .marquee-track, .drop, .glow-border::before {
+    animation: none;
+  }
+}
