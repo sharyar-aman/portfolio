@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 
-const EMAIL = "aslamkniazi@gmail.com";
+const ACCESS_KEY = "PASTE_YOUR_KEY_HERE";
 
 const links = [
-  { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
   {
     label: "LinkedIn",
     value: "linkedin.com/in/aslam-niazi-19155441a",
@@ -13,8 +12,8 @@ const links = [
   },
   {
     label: "GitHub",
-    value: "github.com/sharyaraman",
-    href: "https://github.com/sharyaraman",
+    value: "github.com/sharyar-aman",
+    href: "https://github.com/sharyar-aman",
   },
   {
     label: "Live site",
@@ -26,16 +25,41 @@ const links = [
 const field =
   "w-full rounded-md border border-red-500/25 bg-black/40 px-3 py-2.5 font-head text-sm text-gray-100 outline-none transition focus:border-accent";
 
+type Status = "idle" | "sending" | "success" | "error";
+
 export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
 
-  const send = (e: React.FormEvent) => {
+  const send = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Portfolio message from ${name}`);
-    const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${email})`);
-    window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+    setStatus("sending");
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
+          subject: `Portfolio message from ${name}`,
+          name,
+          email,
+          message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus("success");
+        setName("");
+        setEmail("");
+        setMessage("");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -98,10 +122,21 @@ export default function Contact() {
             </label>
             <button
               type="submit"
-              className="w-full rounded-lg bg-linear-to-r from-accent to-red-800 py-3 font-head text-white shadow-[0_8px_24px_-8px_rgba(255,43,63,0.5)] transition hover:-translate-y-0.5"
+              disabled={status === "sending"}
+              className="w-full rounded-lg bg-linear-to-r from-accent to-red-800 py-3 font-head text-white shadow-[0_8px_24px_-8px_rgba(255,43,63,0.5)] transition hover:-translate-y-0.5 disabled:opacity-60"
             >
-              run contact --send
+              {status === "sending" ? "sending..." : "run contact --send"}
             </button>
+            {status === "success" && (
+              <p className="font-head text-sm text-green-400">
+                ✓ message sent. I&apos;ll get back to you soon.
+              </p>
+            )}
+            {status === "error" && (
+              <p className="font-head text-sm text-accent">
+                ✗ something went wrong. Please try again.
+              </p>
+            )}
           </div>
         </form>
 
