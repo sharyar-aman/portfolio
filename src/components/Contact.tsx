@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 
-const ACCESS_KEY = "PASTE_YOUR_KEY_HERE";
+const ACCESS_KEY = "ac5f637a-ef5c-4d2f-9893-de4841b647aa";
 
 const links = [
-  {
-    label: "LinkedIn",
-    value: "linkedin.com/in/aslam-niazi-19155441a",
-    href: "https://www.linkedin.com/in/aslam-niazi-19155441a/",
-  },
   {
     label: "GitHub",
     value: "github.com/sharyar-aman",
