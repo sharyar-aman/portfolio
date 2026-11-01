@@ -48,7 +48,7 @@ export default function About() {
       <div className="flex flex-1 basis-75 justify-center">
         <div className="relative size-72 overflow-hidden rounded-2xl border border-red-500/40 shadow-[0_12px_40px_-12px_rgba(255,43,63,0.4)]">
           <Image
-            src="/images/Profile.webp"
+            src="/images/Profile.jpg"
             alt="Sharyar Aman"
             fill
             sizes="288px"
